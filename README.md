@@ -4,13 +4,13 @@ A repository containing the necessary code to record motion tracking data from t
 
 ![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)
 [![LGPL--2.1 License](https://img.shields.io/badge/license-LGPL--2.1-blue.svg)](https://github.com/childmindresearch/mobi-motion-tracking/blob/main/LICENSE)
-[![pages](https://img.shields.io/badge/api-docs-blue)](https://github.com/cgmaiorano/zed2i_3d_capture)
+[![pages](https://img.shields.io/badge/api-docs-blue)](https://github.com/childmindresearch/zed2i_3d_capture)
 
 Welcome to `zed2i_3d_lsl_capture`, a Python Repository designed for recording 3D motion tracking data from the ZED 2i stereo camera developed by StereoLabs (https://github.com/stereolabs/) and stream live marker events via LSL (https://labstreaminglayer.readthedocs.io/info/intro.html). This repository performs real time body tracking on a single person, collects the data, and saves it to an .xlsx file in the acceptable format for `mobi_motion_tracking`. The markers streamed to LSL include the camera open, stimulus start, stimulus end, and camera close events. This repository can be run with or without a live stimulus. 
 
 ## Supported software & devices
 
-The package currently supports the ZED 2i and is reliant on proper installation of the `zed-sdk` (https://github.com/stereolabs/zed-sdk) and the `zed-python-api` (https://github.com/stereolabs/zed-python-api). It is also reliant on pylsl (https://labstreaminglayer.readthedocs.io/info/getting_started.html). If you want to run this data collection pipeline without LSL integration see (https://github.com/cgmaiorano/zed2i_3d_capture).
+The package currently supports the ZED 2i and is reliant on proper installation of the `zed-sdk` (https://github.com/stereolabs/zed-sdk) and the `zed-python-api` (https://github.com/stereolabs/zed-python-api). It is also reliant on pylsl (https://labstreaminglayer.readthedocs.io/info/getting_started.html). If you want to run this data collection pipeline without LSL integration see (https://github.com/childmindresearch/zed2i_3d_capture).
 
 **Special Note**
     The ZED SDK is only supported on Windows devices. Please see https://www.stereolabs.com/docs#supported-platforms for full details on ZED supported platforms.
@@ -54,7 +54,7 @@ cd "C:\Program Files (x86)\ZED SDK"
 Clone this repository inside ZED SDK:
 
 ```sh
-git clone https://github.com/cgmaiorano/zed2i_3d_lsl_capture.git
+git clone https://github.com/childmindresearch/zed2i_3d_lsl_capture.git
 ```
 
 Navigate to root:
