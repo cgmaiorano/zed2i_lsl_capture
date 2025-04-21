@@ -10,7 +10,7 @@ Welcome to `zed2i_3d_lsl_capture`, a Python Repository designed for recording 3D
 
 ## Supported software & devices
 
-The package currently supports the ZED 2i and is reliant on proper installation of the `zed-sdk` (https://github.com/stereolabs/zed-sdk) and the `zed-python-api` (https://github.com/stereolabs/zed-python-api). It is also reliant on pylsl (https://labstreaminglayer.readthedocs.io/info/getting_started.html). If you want to run this data collection pipeline without LSL integration see (https://github.com/cgmaiorano/zed2i_3d_lsl_capture).
+The package currently supports the ZED 2i and is reliant on proper installation of the `zed-sdk` (https://github.com/stereolabs/zed-sdk) and the `zed-python-api` (https://github.com/stereolabs/zed-python-api). It is also reliant on pylsl (https://labstreaminglayer.readthedocs.io/info/getting_started.html). If you want to run this data collection pipeline without LSL integration see (https://github.com/cgmaiorano/zed2i_3d_capture).
 
 **Special Note**
     The ZED SDK is only supported on Windows devices. Please see https://www.stereolabs.com/docs#supported-platforms for full details on ZED supported platforms.
