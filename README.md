@@ -84,4 +84,4 @@ python -m main -p "100" -s "1" --video "C:\path\to\stimulus\video.avi"
 
 ## Post-Processing
 
-After data collection, saved data can be compared to a "gold standard" through `mobi_motion_tracking` https://github.com/childmindresearch/mobi-motion-tracking. 
+If there was a stimulus presented, the raw xlsx files can be trimmed by the stimulus_start and stimulus_end times saved in your xdf file from LSL. The trimmed xlsx files are then prepared to be compared to a "gold standard" through `mobi_motion_tracking` https://github.com/childmindresearch/mobi-motion-tracking. 
