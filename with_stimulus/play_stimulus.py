@@ -1,16 +1,22 @@
 import time
 import subprocess
+
 # import screeninfo
 import os
 import pygetwindow as gw
 from datetime import datetime
 
 
-def play_video(vlc_path, video_path, sharedstate):
+def play_video(vlc_path, video_path, sharedstate, lsl_outlet):
     sharedstate.wait_for_thread.wait()
 
-    process = subprocess.Popen([vlc_path, video_path, '--play-and-exit', '--fullscreen'])
-    
+    process = subprocess.Popen([
+        vlc_path,
+        video_path,
+        "--play-and-exit",
+        "--fullscreen",
+    ])
+
     # Wait for the window to appear
     filename = os.path.basename(video_path)
     vlc_window = None
@@ -33,11 +39,13 @@ def play_video(vlc_path, video_path, sharedstate):
 
         time.sleep(0.1)
         start_time = datetime.now()
-        sharedstate.timing_container['start'] = start_time
+        lsl_outlet.push_sample([f"stimulus_start: {start_time}"])
+        time.sleep(0.1)
 
     process.wait()
 
     end_time = datetime.now()
-    sharedstate.timing_container['end'] = end_time
+    lsl_outlet.push_sample([f"stimulus_end: {end_time}"])
+    time.sleep(0.1)
 
     sharedstate.stop_event.set()

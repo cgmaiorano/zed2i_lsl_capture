@@ -1,9 +1,12 @@
 import threading
+import time
+
+from datetime import datetime
+from pylsl import StreamInfo, StreamOutlet
 
 from core import zed_parameters
 from core import export
 
-from with_stimulus import formatting
 from with_stimulus import processing
 from with_stimulus import play_stimulus
 
@@ -11,21 +14,34 @@ from with_stimulus.sharedstate import SharedState
 
 
 def run(participant_ID, sequence, video):
-
     print(f"Beginning CAMI Protocol Sequence {sequence}")
 
     sharedstate = SharedState()
 
-    # Create camera object, initialize camera parameters, start recording svo file
+    # Create camera object, initialize camera parameters
     zed_parameters.initialize_zed_parameters(sharedstate.zed)
+    start_time = datetime.now()
+
+    # Create new stream info for lsl, stream camera_open, change source_id from "zed2i-harlem" to appropriate device, ex: "zed2i-midtown"
+    info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed2i-harlem")
+    outlet = StreamOutlet(info)
+    outlet.push_sample([f"camera_open: {start_time}"])
+    time.sleep(0.1)
+
+    # start recording svo file
     export.record_svo(participant_ID, sequence, sharedstate.zed)
 
     # Path to the VLC player executable
     vlc_path = r"C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"
 
     # Threads
-    body_tracking_thread = threading.Thread(target=processing.body_tracking, args=(sharedstate,))
-    video_thread = threading.Thread(target=play_stimulus.play_video, args=(vlc_path, str(video), sharedstate))
+    body_tracking_thread = threading.Thread(
+        target=processing.body_tracking, args=(sharedstate, outlet)
+    )
+    video_thread = threading.Thread(
+        target=play_stimulus.play_video,
+        args=(vlc_path, str(video), sharedstate, outlet),
+    )
 
     body_tracking_thread.start()
     video_thread.start()
@@ -35,13 +51,14 @@ def run(participant_ID, sequence, video):
     body_tracking_thread.join()
 
     if sharedstate.quit:
-        print(f"Manual Quit... ZED Body tracking for Participant: {participant_ID} Sequence: {sequence} INCOMPLETED.")
-        return 
-    
-    # trim data
-    formatting.trim_dataframe(sharedstate)
+        print(
+            f"Manual Quit... ZED Body tracking for Participant: {participant_ID} Sequence: {sequence} INCOMPLETED."
+        )
+        return
 
     # save data
     export.save_sequence(participant_ID, sequence, sharedstate.ordered_df)
 
-    print(f"ZED Body tracking for Participant: {participant_ID} Sequence: {sequence} is complete")
+    print(
+        f"ZED Body tracking for Participant: {participant_ID} Sequence: {sequence} is complete"
+    )
