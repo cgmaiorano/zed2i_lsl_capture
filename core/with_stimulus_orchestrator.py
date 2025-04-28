@@ -26,7 +26,6 @@ def run(participant_ID, sequence, video):
     info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed2i-harlem")
     outlet = StreamOutlet(info)
     outlet.push_sample([f"camera_open: {start_time}"])
-    time.sleep(0.1)
 
     # start recording svo file
     export.record_svo(participant_ID, sequence, sharedstate.zed)
