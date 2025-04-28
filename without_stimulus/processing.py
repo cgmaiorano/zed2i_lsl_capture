@@ -112,9 +112,9 @@ def body_tracking(zed, lsl_outlet):
     # Close the viewer
     zed.disable_body_tracking()
     zed.disable_positional_tracking()
-    zed.close()
     end_time = datetime.now()
     lsl_outlet.push_sample([f"camera_close: {end_time}"])
+    zed.close()
     time.sleep(0.1)
     cv2.destroyAllWindows()
 
