@@ -22,11 +22,17 @@ def run(participant_ID, sequence):
     # Create new stream info for lsl, stream camera_open, change source_id from "zed2i-harlem" to appropriate device, ex: "zed2i-midtown"
     info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed2i-harlem")
     outlet = StreamOutlet(info)
-    outlet.push_sample([f"camera_open: {start_time}"])
+
+    while True:
+        key = input("Press 'c' to continue: ").strip()
+        if key == 'c':
+            break
 
     # start recording svo file
     export.record_svo(participant_ID, sequence, zed)
-
+    
+    outlet.push_sample([f"camera_open: {start_time}"])
+    
     # main processing
     ordered_df = processing.body_tracking(zed, outlet)
 
