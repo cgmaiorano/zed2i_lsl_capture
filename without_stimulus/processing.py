@@ -40,18 +40,26 @@ def body_tracking(zed, lsl_outlet):
     data = np.array(np.zeros((1, 114)))
 
     # Start body tracking
-    print("Press 'q' to quit, 'd' to break the loop gracefully.")
+    print("Press 'q' to QUIT without saving. Press 'd' when DONE and save.")
 
     while True:  # Infinite loop
         key = cv2.waitKey(1) & 0xFF  # Non-blocking key press check
 
-        if key == ord("q"):  # If 'q' is pressed, break the loop
-            print("Quitting...")
+        if key == ord("q"):
+            print("You pressed 'q', quitting...")
+            key_press = datetime.now()
+            lsl_outlet.push_sample([
+                f"quit_key_press: {key_press.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+            ])
             break
 
-        if key == ord("d"):  # Break the loop gracefully if 'd' is pressed
+        if key == ord("d"):
             print("You pressed 'd', motion tracking is done.")
-            break  # Exit the loop but continue with the rest of the function
+            key_press = datetime.now()
+            lsl_outlet.push_sample([
+                f"done_key_press: {key_press.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+            ])
+            break
 
         # Grab a frame
         if zed.grab() == sl.ERROR_CODE.SUCCESS:
@@ -62,9 +70,11 @@ def body_tracking(zed, lsl_outlet):
             f += 1
             frames.append(f)
 
+            lsl_outlet.push_sample([f"body_tracking_frame_number: {f}"])
+
             # retrieve timestamps
             time_reference = datetime.now()
-            timestamps.append(time_reference)
+            timestamps.append(time_reference.strftime("%Y-%m-%d %H:%M:%S.%f"))
 
             # label first body and store head centroid coordinates for current frame
             first_body = bodies.body_list[0]
@@ -106,24 +116,30 @@ def body_tracking(zed, lsl_outlet):
 
         # Zed connection failed
         elif zed.grab() != sl.ERROR_CODE.SUCCESS:
+            zed_err = datetime.now()
+            lsl_outlet.push_sample([
+                f"failed_zed_connection: {zed_err.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+            ])
             print("Failed ZED connection")
             break
 
     # Close the viewer
     zed.disable_body_tracking()
     zed.disable_positional_tracking()
-    end_time = datetime.now()
-    lsl_outlet.push_sample([f"camera_close: {end_time}"])
     zed.close()
-    time.sleep(0.1)
+
+    end_time = datetime.now()
+    lsl_outlet.push_sample([
+        f"camera_close: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+    ])
+
     cv2.destroyAllWindows()
 
+    # If user quit, return None and don't save data. Else, format data and save.
     if key == ord("q"):
         return None
-
-    # format the data
-    ordered_df = formatting.format_data(
-        data, parts, x_HEAD, y_HEAD, z_HEAD, frames, timestamps
-    )
-
-    return ordered_df
+    else:
+        ordered_df = formatting.format_data(
+            data, parts, x_HEAD, y_HEAD, z_HEAD, frames, timestamps
+        )
+        return ordered_df

@@ -1,5 +1,4 @@
 import threading
-import time
 
 from datetime import datetime
 from pylsl import StreamInfo, StreamOutlet
@@ -14,18 +13,26 @@ from with_stimulus.sharedstate import SharedState
 
 
 def run(participant_ID, sequence, video):
-    print(f"Beginning CAMI Protocol Sequence {sequence}")
+    print(f"Beginning Sequence {sequence}")
 
     sharedstate = SharedState()
-
-    # Create camera object, initialize camera parameters
-    zed_parameters.initialize_zed_parameters(sharedstate.zed)
-    start_time = datetime.now()
 
     # Create new stream info for lsl, stream camera_open, change source_id from "zed2i-harlem" to appropriate device, ex: "zed2i-midtown"
     info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed2i-harlem")
     outlet = StreamOutlet(info)
-    outlet.push_sample([f"camera_open: {start_time}"])
+
+    while True:
+        key = input(
+            "Press 'c' to continue after starting lsl stream in LabRecorder: "
+        ).strip()
+        if key == "c":
+            break
+
+    # Create camera object, initialize camera parameters
+    zed_parameters.initialize_zed_parameters(sharedstate.zed)
+
+    start_time = datetime.now()
+    outlet.push_sample([f"camera_open: {start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"])
 
     # start recording svo file
     export.record_svo(participant_ID, sequence, sharedstate.zed)

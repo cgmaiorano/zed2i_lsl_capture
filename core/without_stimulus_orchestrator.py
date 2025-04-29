@@ -1,4 +1,3 @@
-import time
 import pyzed.sl as sl
 
 from datetime import datetime
@@ -11,28 +10,30 @@ from without_stimulus import processing
 
 
 def run(participant_ID, sequence):
-    print(f"Beginning CAMI Protocol Sequence {sequence}")
+    print(f"Beginning Sequence {sequence}")
 
     zed = sl.Camera()
-
-    # Create camera object, initialize camera parameters
-    zed_parameters.initialize_zed_parameters(zed)
 
     # Create new stream info for lsl, stream camera_open, change source_id from "zed2i-harlem" to appropriate device, ex: "zed2i-midtown"
     info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed2i-harlem")
     outlet = StreamOutlet(info)
 
     while True:
-        key = input("Press 'c' to continue: ").strip()
-        if key == 'c':
+        key = input(
+            "Press 'c' to continue after starting lsl stream in LabRecorder: "
+        ).strip()
+        if key == "c":
             break
 
-    # start recording svo file
-    export.record_svo(participant_ID, sequence, zed)
-    
+    # Create camera object, initialize camera parameters, open camera
+    zed_parameters.initialize_zed_parameters(zed)
+
     start_time = datetime.now()
-    outlet.push_sample([f"camera_open: {start_time}"])
-    
+    outlet.push_sample([f"camera_open: {start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"])
+
+    # start recording svo file
+    export.record_svo(participant_ID, sequence, zed, outlet)
+
     # main processing
     ordered_df = processing.body_tracking(zed, outlet)
 

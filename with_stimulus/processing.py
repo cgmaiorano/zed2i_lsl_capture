@@ -19,7 +19,6 @@ def body_tracking(sharedstate, lsl_outlet):
     # Create objects filled in the main loop
     bodies = sl.Bodies()
     image = sl.Mat()
-    key_wait = 10
     key = ""
 
     # Create initial list of body part names with coordinates (1, 114)-- to be used as column headers in data_df
@@ -42,16 +41,19 @@ def body_tracking(sharedstate, lsl_outlet):
     # Create empty array to store body part coordinates (to be merged into df later)
     data = np.array(np.zeros((1, 114)))
 
-    # Start body tracking
-    print("Press 'q' to exit")
-
     sharedstate.wait_for_thread.wait()
 
-    # while not sharedstate.stop_event.is_set():
-    while True:  # Infinite loop, will break manually or through stop event
-        # Check if stop event is set or quit is triggered by keypress
-        if sharedstate.stop_event.is_set():
-            print("Stop event triggered, exiting loop...")
+    # Start body tracking
+    print(
+        "Press 'q' to QUIT without saving, otherwise program will automatically close and save when complete."
+    )
+    while True:
+        if sharedstate.stop_event.is_set():  # Check if stop event is set
+            print("Stop event triggered, motion tracking is done...")
+            thread_stop = datetime.now()
+            lsl_outlet.push_sample([
+                f"Thread_stop_event: {thread_stop.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+            ])
             break
 
         key = cv2.waitKey(1) & 0xFF  # Non-blocking key press check
@@ -60,6 +62,10 @@ def body_tracking(sharedstate, lsl_outlet):
             print("Quitting...")
             sharedstate.quit = True
             sharedstate.stop_event.set()
+            key_press = datetime.now()
+            lsl_outlet.push_sample([
+                f"quit_key_press: {key_press.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+            ])
             break
 
         # Grab a frame
@@ -71,9 +77,11 @@ def body_tracking(sharedstate, lsl_outlet):
             f += 1
             frames.append(f)
 
+            lsl_outlet.push_sample([f"body_tracking_frame_number: {f}"])
+
             # retrieve timestamps
             time_reference = datetime.now()
-            timestamps.append(time_reference)
+            timestamps.append(time_reference.strftime("%Y-%m-%d %H:%M:%S.%f"))
 
             # label first body and store head centroid coordinates for current frame
             first_body = bodies.body_list[0]
@@ -117,6 +125,10 @@ def body_tracking(sharedstate, lsl_outlet):
 
         # Zed connection failed
         elif sharedstate.zed.grab() != sl.ERROR_CODE.SUCCESS:
+            zed_err = datetime.now()
+            lsl_outlet.push_sample([
+                f"failed_zed_connection: {zed_err.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+            ])
             print("Failed ZED connection")
             break
 
@@ -124,9 +136,12 @@ def body_tracking(sharedstate, lsl_outlet):
     sharedstate.zed.disable_body_tracking()
     sharedstate.zed.disable_positional_tracking()
     sharedstate.zed.close()
+
     end_time = datetime.now()
-    lsl_outlet.push_sample([f"camera_close: {end_time}"])
-    time.sleep(0.1)
+    lsl_outlet.push_sample([
+        f"camera_close: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+    ])
+
     cv2.destroyAllWindows()
 
     if sharedstate.quit:  # if user press 'q' to quit, break out
@@ -135,3 +150,4 @@ def body_tracking(sharedstate, lsl_outlet):
         formatting.format_data(
             data, parts, x_HEAD, y_HEAD, z_HEAD, frames, timestamps, sharedstate
         )
+        return
