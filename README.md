@@ -40,7 +40,7 @@ The main processing pipeline of the `zed2i_3d_lsl_capture` module can be describ
     - Click apply and Ok
     - Restart your terminal
 
-2. Create a virtual environment. Any environment management tool can be used, but the following steps describe setting up a uv venv:
+3. Create a virtual environment. Any environment management tool can be used, but the following steps describe setting up a uv venv:
 
 create a virtual environment named zed2i_lsl_venv
 ```sh
@@ -51,7 +51,7 @@ uv venv zed2i_lsl_venv
 source zed2i/bin/activate
 ```
 
-3. Install the ZED Python API. Installation support documentation can be found here on the Stereolabs website (https://www.stereolabs.com/docs/app-development/python/install). However, follow our steps below for proper CMI/MoBI-specific API installation:
+4. Install the ZED Python API. Installation support documentation can be found here on the Stereolabs website (https://www.stereolabs.com/docs/app-development/python/install). However, follow our steps below for proper CMI/MoBI-specific API installation:
 
 install API dependencies
 ```sh
@@ -66,7 +66,7 @@ uv run get_python_api.py
 ```
 *** Expect errors regarding pyopengl. If the pyzed wheel is installed correctly, ignore these errors and proceed. 
 
-4. Install repository-dependent packages
+5. Install repository-dependent packages
 
 ```sh
 uv pip install pandas pygetwindow pylsl screeninfo
