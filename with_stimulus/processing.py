@@ -1,5 +1,4 @@
 import cv2
-import time
 import pyzed.sl as sl
 import numpy as np
 from datetime import datetime
