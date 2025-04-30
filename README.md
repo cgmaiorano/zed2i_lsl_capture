@@ -48,7 +48,7 @@ uv venv zed2i_lsl_venv
 ```
  activate the environment
 ```sh
-source zed2i/bin/activate
+zed2i_lsl_venv\Source\activate
 ```
 
 4. Install the ZED Python API. Installation support documentation can be found here on the Stereolabs website (https://www.stereolabs.com/docs/app-development/python/install). However, follow our steps below for proper CMI/MoBI-specific API installation:
