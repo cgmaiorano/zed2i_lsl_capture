@@ -68,7 +68,7 @@ cd "C:\Program Files (x86)\ZED SDK"
 ```sh
 uv run get_python_api.py
 ```
-*** Expect errors regarding pyopengl. If the pyzed wheel is installed correctly, ignore these errors and proceed. 
+
 
 5. Install repository-dependent packages
 
