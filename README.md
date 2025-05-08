@@ -101,6 +101,7 @@ cd zed2i_3d_lsl_capture
     
     Prior to running the commands below: 
         - create directories to store collected data: `collected_data\xlsx` and `collected_data\svo`
+        - rename your source_id with the name of your zed device in `core\with_stimulus_orchestrator.py` line 21 and in `core\without_stimulus_orchestrator.py` line 18.
         - navigate to `core\with_stimulus_orchestrator.py` and replace `vlc_path` with the correct path to your vlc player executable.
 
 
