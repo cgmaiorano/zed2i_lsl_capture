@@ -45,3 +45,7 @@ def run(participant_ID, sequence):
 
     # save data
     export.save_sequence(participant_ID, sequence, ordered_df)
+
+    print(
+        f"ZED Body tracking for Participant: {participant_ID} Sequence: {sequence} is complete"
+    )
