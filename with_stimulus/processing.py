@@ -58,7 +58,7 @@ def body_tracking(sharedstate, lsl_outlet):
         key = cv2.waitKey(1) & 0xFF  # Non-blocking key press check
 
         if key == ord("q"):  # If 'q' is pressed, break the loop
-            print("Quitting...")
+            print("You pressed 'q', quitting...")
             sharedstate.quit = True
             sharedstate.stop_event.set()
             key_press = datetime.now()
