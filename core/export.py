@@ -1,8 +1,9 @@
 import pyzed.sl as sl
 import pandas as pd
+from datetime import datetime
 
 
-def record_svo(participant_ID, sequence, zed):
+def record_svo(participant_ID, sequence, zed, lsl_outlet):
     recording_param = sl.RecordingParameters(
         f"collected_data/svo/{participant_ID}_seq{sequence}.svo2",
         sl.SVO_COMPRESSION_MODE.H264,
@@ -14,6 +15,11 @@ def record_svo(participant_ID, sequence, zed):
         exit(1)
 
     # Start Recording
+    svo_start_time = datetime.now()
+    lsl_outlet.push_sample([
+        f"SVO_recording_start: {svo_start_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+    ])
+
     sl.RuntimeParameters()
 
 
