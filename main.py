@@ -1,4 +1,4 @@
-"""Main function for zed2i_3d_capture."""
+"""Main function for zed2i_3d_lsl_capture."""
 
 from core import cli
 

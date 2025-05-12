@@ -5,8 +5,9 @@ from typing import List, Optional
 from core import with_stimulus_orchestrator
 from core import without_stimulus_orchestrator
 
+
 def parse_arguments(args: Optional[List[str]]) -> argparse.Namespace:
-    """Argument parser for mobi-motion-tracking cli.
+    """Argument parser for zed2i_3d_lsl_capture cli.
 
     Args:
         args: A list of command line arguments given as strings. If None, the parser
@@ -19,9 +20,9 @@ def parse_arguments(args: Optional[List[str]]) -> argparse.Namespace:
         SystemExit: if arguments are None.
     """
     parser = argparse.ArgumentParser(
-        description="Collect ZED motion tracking data with or without a stimulus.",
+        description="Collect ZED motion tracking data with or without a stimulus and stream to LSL.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        epilog="Please report issues at https://github.com/childmindresearch/zed2i_3d_capture.",
+        epilog="Please report issues at https://github.com/childmindresearch/zed2i_3d_lsl_capture.",
     )
     parser.add_argument(
         "-p",
@@ -48,12 +49,12 @@ def parse_arguments(args: Optional[List[str]]) -> argparse.Namespace:
     return parser.parse_args(args)
 
 
-
 def main(args: Optional[List[str]] = None):
-    
     arguments = parse_arguments(args)
 
     if arguments.video is None:
         without_stimulus_orchestrator.run(arguments.participant, arguments.sequence)
     else:
-        with_stimulus_orchestrator.run(arguments.participant, arguments.sequence, arguments.video)
+        with_stimulus_orchestrator.run(
+            arguments.participant, arguments.sequence, arguments.video
+        )
