@@ -4,7 +4,7 @@ A repository containing the necessary code to record motion tracking data from t
 
 ![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)
 [![LGPL--2.1 License](https://img.shields.io/badge/license-LGPL--2.1-blue.svg)](https://github.com/childmindresearch/mobi-motion-tracking/blob/main/LICENSE)
-[![pages](https://img.shields.io/badge/api-docs-blue)](https://github.com/childmindresearch/zed2i_3d_capture)
+[![pages](https://img.shields.io/badge/api-docs-blue)](https://github.com/childmindresearch/zed2i_3d_lsl_capture)
 
 Welcome to `zed2i_3d_lsl_capture`, a Python Repository designed for recording 3D motion tracking data from the ZED 2i stereo camera developed by StereoLabs (https://github.com/stereolabs/) and stream live marker events via LSL (https://labstreaminglayer.readthedocs.io/info/intro.html). This repository performs real time body tracking on a single person, collects the data, and saves it to an .xlsx file in the acceptable format for `mobi_motion_tracking`. The markers streamed to LSL include the camera open, stimulus start, stimulus end, and camera close events. This repository can be run with or without a live stimulus. 
 
@@ -21,12 +21,28 @@ The package currently supports the ZED 2i and is reliant on proper installation 
 The main processing pipeline of the `zed2i_3d_lsl_capture` module can be described as follows:
 
 - **Determine sitmulus presence**: The user provides the participant ID and sequence number in the command line. A path to a stimulus video may also be provided. If a video path is provided the cli will call with_stimulus_orchestrator.py, otherwise without_stimulus_orchestrator.py will be called.
-- **Initiate the camera**: The zed camera will be triggerred to open first in both orchestrtaors. If the camera cannot be accessed, an error will be thrown. 
+- **Initiate the camera**: The zed camera will be triggerred to open first in both orchestrators. If the camera cannot be accessed, an error will be thrown. 
 - **Begin body tracking**: Skeletal joints will begin being captured at 30 fps. Both pathways can be manually interrupted by pressing the 'q' key.
     - **Present stimulus**: If a video path is provided, the stimulus will be displayed.
 - **Body tracking ends**: If a stimulus is being displayed, body tracking will automatically complete at the end of the stimulus video. If there is no stimulus, body tracking can be concluded by pressing the 'd' key.
     - **Trim data**: If a stimulus was played, the body tracking data will automatically by trimmed from both the start and end to be time-synced with the stimulus. If there was no sitmulus, the full data collection session will be returned.
 - **Export data**: The live recording of the participant will be saved as a .svo2 file located in collected_data/svo. Joint data will be saved in an .xlsx file located in collected_data/xlsx.
+
+## LSL Event Markers
+
+Below is a complete list of all possible LSL event markers to be streamed dependent on various events that may occur during data collection:
+
+- camera_open
+- SVO_recording_start
+- thread_stop_event
+- quit_key_press
+- body_tracking_frame_number
+- failed_zed_connection
+- camera_close
+- VLC_window_failure
+- stimulus_start
+- stimulus_end
+
 
 ## Installation
 
