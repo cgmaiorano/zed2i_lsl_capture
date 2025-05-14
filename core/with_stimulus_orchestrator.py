@@ -11,6 +11,8 @@ from with_stimulus import play_stimulus
 
 from with_stimulus.sharedstate import SharedState
 
+from settings import VLC_EXE, ZED_DEVICE
+
 
 def run(participant_ID, sequence, video):
     print(f"Beginning Sequence {sequence}")
@@ -18,7 +20,7 @@ def run(participant_ID, sequence, video):
     sharedstate = SharedState()
 
     # Create new stream info for lsl, stream camera_open, change source_id from "zed2i-harlem" to appropriate device, ex: "zed2i-midtown"
-    info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed2i-harlem")
+    info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", ZED_DEVICE)
     outlet = StreamOutlet(info)
 
     while True:
@@ -38,7 +40,7 @@ def run(participant_ID, sequence, video):
     export.record_svo(participant_ID, sequence, sharedstate.zed)
 
     # Path to the VLC player executable
-    vlc_path = r"C:\\Program Files\\VideoLAN\\VLC\\vlc.exe"
+    vlc_path = VLC_EXE
 
     # Threads
     body_tracking_thread = threading.Thread(

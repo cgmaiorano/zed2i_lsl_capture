@@ -8,6 +8,8 @@ from core import export
 
 from without_stimulus import processing
 
+from settings import ZED_DEVICE
+
 
 def run(participant_ID, sequence):
     print(f"Beginning Sequence {sequence}")
@@ -15,7 +17,7 @@ def run(participant_ID, sequence):
     zed = sl.Camera()
 
     # Create new stream info for lsl, stream camera_open, change source_id from "zed2i-harlem" to appropriate device, ex: "zed2i-midtown"
-    info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed2i-harlem")
+    info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", ZED_DEVICE)
     outlet = StreamOutlet(info)
 
     while True:

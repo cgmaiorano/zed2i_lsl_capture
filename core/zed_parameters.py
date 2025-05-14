@@ -1,5 +1,7 @@
 import pyzed.sl as sl
 
+from settings import DEPTH_MODE, DETECTION_MODEL
+
 
 def initialize_zed_parameters(zed):
     # Create a InitParameters object and set configuration parameters
@@ -7,7 +9,7 @@ def initialize_zed_parameters(zed):
     init_params.camera_resolution = sl.RESOLUTION.HD1080  # Use HD1080 video mode
     init_params.camera_fps = 30
     init_params.coordinate_units = sl.UNIT.METER  # Set coordinate units
-    init_params.depth_mode = sl.DEPTH_MODE.ULTRA
+    init_params.depth_mode = getattr(sl.DEPTH_MODE, DEPTH_MODE)
     init_params.coordinate_system = sl.COORDINATE_SYSTEM.RIGHT_HANDED_Y_UP
 
     # Open the camera
@@ -27,7 +29,7 @@ def initialize_tracking_parameters(zed):
     body_param = sl.BodyTrackingParameters()
     body_param.enable_tracking = True  # Track people across images flow
     body_param.enable_body_fitting = True  # Smooth skeleton move
-    body_param.detection_model = sl.BODY_TRACKING_MODEL.HUMAN_BODY_ACCURATE
+    body_param.detection_model = getattr(sl.BODY_TRACKING_MODEL, DETECTION_MODEL)
     body_param.body_format = (
         sl.BODY_FORMAT.BODY_38
     )  # Choose the BODY_FORMAT you wish to use
