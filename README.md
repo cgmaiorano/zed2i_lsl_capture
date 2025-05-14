@@ -10,7 +10,7 @@ Welcome to `zed2i_3d_lsl_capture`, a Python Repository designed for recording 3D
 
 ## Supported software & devices
 
-The package currently supports the ZED 2i and is reliant on proper installation of the `zed-sdk` (https://github.com/stereolabs/zed-sdk) and the `zed-python-api` (https://github.com/stereolabs/zed-python-api). It is also reliant on pylsl (https://labstreaminglayer.readthedocs.io/info/getting_started.html). If you want to run this data collection pipeline without LSL integration see (https://github.com/childmindresearch/zed2i_3d_capture).
+The package currently supports the ZED 2i and is reliant on proper installation of the `zed-sdk` (https://github.com/stereolabs/zed-sdk) and the `zed-python-api` (https://github.com/stereolabs/zed-python-api). It is also reliant on pylsl (https://labstreaminglayer.readthedocs.io/info/getting_started.html). If you want to run this data collection pipeline without LSL integration see (https://github.com/childmindresearch/zed2i_3d_capture). This package also requires VLC Media Player to be installed.
 
 **Special Note**
     The ZED SDK is only supported on Windows devices. Please see https://www.stereolabs.com/docs#supported-platforms for full details on ZED supported platforms.
@@ -24,8 +24,7 @@ The main processing pipeline of the `zed2i_3d_lsl_capture` module can be describ
 - **Initiate the camera**: The zed camera will be triggerred to open first in both orchestrators. If the camera cannot be accessed, an error will be thrown. 
 - **Begin body tracking**: Skeletal joints will begin being captured at 30 fps. Both pathways can be manually interrupted by pressing the 'q' key.
     - **Present stimulus**: If a video path is provided, the stimulus will be displayed.
-- **Body tracking ends**: If a stimulus is being displayed, body tracking will automatically complete at the end of the stimulus video. If there is no stimulus, body tracking can be concluded by pressing the 'd' key.
-    - **Trim data**: If a stimulus was played, the body tracking data will automatically by trimmed from both the start and end to be time-synced with the stimulus. If there was no sitmulus, the full data collection session will be returned.
+- **Body tracking ends**: If a stimulus is being displayed, body tracking will automatically complete at the end of the stimulus video. If there is no stimulus, body tracking can be concluded by pressing the 'd' key. Body tracking can also be interrupted by pressing the 'q' key whether there is a stimulus or not.
 - **Export data**: The live recording of the participant will be saved as a .svo2 file located in collected_data/svo. Joint data will be saved in an .xlsx file located in collected_data/xlsx.
 
 ## LSL Event Markers
@@ -45,18 +44,19 @@ Below is a complete list of all possible LSL event markers to be streamed depend
 
 
 ## Installation
+1. If you do not already have it installed, install VLC Media Player from the official website or Microsoft store.
 
-1. Install the ZED SDK from StereoLabs. Installation documentation can be found here: https://www.stereolabs.com/docs/installation/windows 
+2. Install the ZED SDK from StereoLabs. Installation documentation can be found here: https://www.stereolabs.com/docs/installation/windows 
     - *** When prompted to select the folder location for the ZED SDK, you can use the default path ("C:\Program Files (x86)\ZED SDK") or change it based on your preference. However, this readme is based on the default path.
 
-2. Grant administrative permissions to the ZED SDK. 
+3. Grant administrative permissions to the ZED SDK. 
     - Navigate to the ZED SDK folder in "C:\Program Files (x86)" in file explorer
     - Right click on the folder -> select properties -> go to security tab -> click edit
     - Select the correct user to grant access to and tick the box next to full control under "Allow" 
     - Click apply and Ok
     - Restart your terminal
 
-3. Create a virtual environment. Any environment management tool can be used, but the following steps describe setting up a uv venv:
+4. Create a virtual environment. Any environment management tool can be used, but the following steps describe setting up a uv venv:
 
 create a virtual environment named zed2i_lsl_venv
 ```sh
@@ -64,10 +64,10 @@ uv venv zed2i_lsl_venv
 ```
  activate the environment
 ```sh
-zed2i_lsl_venv\Source\activate
+zed2i_lsl_venv\Scripts\activate
 ```
 
-4. Install the ZED Python API. Installation support documentation can be found here on the Stereolabs website (https://www.stereolabs.com/docs/app-development/python/install). However, follow our steps below for proper CMI/MoBI-specific API installation:
+5. Install the ZED Python API. Installation support documentation can be found here on the Stereolabs website (https://www.stereolabs.com/docs/app-development/python/install). However, follow our steps below for proper CMI/MoBI-specific API installation:
 
 ensure pip is installed 
 ```sh
@@ -86,7 +86,7 @@ uv run get_python_api.py
 ```
 
 
-5. Install repository-dependent packages
+6. Install repository-dependent packages
 
 ```sh
 uv pip install pandas pygetwindow pylsl screeninfo
@@ -95,26 +95,26 @@ uv pip install pandas pygetwindow pylsl screeninfo
 
 ## Quick start
 
-Navigate to the ZED SDK directory:
+1. Navigate to the ZED SDK directory:
 
 ```sh
 cd "C:\Program Files (x86)\ZED SDK"
 ```
 
-Clone this repository inside ZED SDK:
+2. Clone this repository inside ZED SDK:
 
 ```sh
 git clone https://github.com/childmindresearch/zed2i_3d_lsl_capture.git
 ```
 
-Navigate to root:
+3. Navigate to root:
 
 ```sh
 cd zed2i_3d_lsl_capture
 ```
 
-Run the setup_settings.py file and follow prompts in terminal. All details regarding zed settings can be found in the zed documentation:
-https://www.stereolabs.com/docs/depth-sensing/depth-settings and https://www.stereolabs.com/docs/body-tracking/using-body-tracking
+4. Run the setup_settings.py file and follow prompts in terminal. All details regarding zed settings can be found in the zed documentation: https://www.stereolabs.com/docs/depth-sensing/depth-settings and https://www.stereolabs.com/docs/body-tracking/using-body-tracking
+   
 ```sh
 python setup_settings.py
 ```
@@ -122,13 +122,13 @@ python setup_settings.py
 ## Run participant 100 for sequence 1 WITHOUT STIMULUS:
 
 ```sh
-python -m main -p "100" -s "1"
+uv run main.py -p "100" -s "1"
 ```
 
 ## Run participant 100 for sequence 1 WITH STIMULUS:
 
 ```sh
-python -m main -p "100" -s "1" --video "C:\path\to\stimulus\video.avi"
+uv run main.py -p "100" -s "1" --video "C:\path\to\stimulus\video.avi"
 ```
 
 ## Post-Processing
