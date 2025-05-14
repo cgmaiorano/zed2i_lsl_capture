@@ -113,21 +113,19 @@ Navigate to root:
 cd zed2i_3d_lsl_capture
 ```
 
-**Special Note**
-    
-    Prior to running the commands below: 
-        - create directories to store collected data: `collected_data\xlsx` and `collected_data\svo`
-        - rename your source_id with the name of your zed device in `core\with_stimulus_orchestrator.py` line 21 and in `core\without_stimulus_orchestrator.py` line 18.
-        - navigate to `core\with_stimulus_orchestrator.py` and replace `vlc_path` with the correct path to your vlc player executable.
+Run the setup_settings.py file and follow prompts in terminal. All details regarding zed settings can be found in the zed documentation:
+https://www.stereolabs.com/docs/depth-sensing/depth-settings and https://www.stereolabs.com/docs/body-tracking/using-body-tracking
+```sh
+python -m setup_settings.py
+```
 
-
-#### Run participant 100 for sequence 1 WITHOUT STIMULUS:
+## Run participant 100 for sequence 1 WITHOUT STIMULUS:
 
 ```sh
 python -m main -p "100" -s "1"
 ```
 
-#### Run participant 100 for sequence 1 WITH STIMULUS:
+## Run participant 100 for sequence 1 WITH STIMULUS:
 
 ```sh
 python -m main -p "100" -s "1" --video "C:\path\to\stimulus\video.avi"
