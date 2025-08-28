@@ -18,33 +18,16 @@
 #
 ########################################################################
 
-import sys
+import keyboard
 import pyzed.sl as sl
-from signal import signal, SIGINT
 from datetime import datetime
 
-
-#Handler to deal with CTRL+C properly
-def handler(zed, outlet, signal_received, frame):
-    zed.disable_recording()
-    end_time = datetime.now()
-    outlet.push_sample([
-        f"SVO_recording_stop: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
-    ])
-
-    zed.close()
-    end_time = datetime.now()
-    outlet.push_sample([
-        f"camera_close: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
-    ])
-    sys.exit(0)
-
-signal(SIGINT, handler)
 
 def main(zed, outlet, participant_ID, sequence):
 
     init = sl.InitParameters()
     init.depth_mode = sl.DEPTH_MODE.NONE # Set configuration parameters for the ZED
+    init.camera_resolution = sl.RESOLUTION.HD1080  # Use HD1080 video mode
 
     status = zed.open(init) 
     if status != sl.ERROR_CODE.SUCCESS: 
@@ -67,11 +50,26 @@ def main(zed, outlet, participant_ID, sequence):
     ])
 
     runtime = sl.RuntimeParameters()
-    print("SVO is Recording, use Ctrl-C to stop.") # Start recording SVO, stop with Ctrl-C command
+    print("SVO is Recording, use q key to stop.")
     frames_recorded = 0
 
     while True:
-        if zed.grab(runtime) <= sl.ERROR_CODE.SUCCESS : # Check that a new image is successfully acquired
+        if zed.grab(runtime) == sl.ERROR_CODE.SUCCESS:
             frames_recorded += 1
             print("Frame count: " + str(frames_recorded), end="\r")
-    
+        
+        if keyboard.is_pressed('q'):
+            print("\n'q' pressed. Stopping recording.")
+            break
+
+    # Graceful exit
+    zed.disable_recording()
+    end_time = datetime.now()
+    outlet.push_sample([
+        f"SVO_recording_stop: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+    ])
+
+    zed.close()
+    outlet.push_sample([
+        f"camera_close: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+    ])
