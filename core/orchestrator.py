@@ -7,7 +7,6 @@ from core import zed_parameters
 from core import export
 from core import processing
 
-from settings import ZED_DEVICE
 
 
 def run(participant_ID, sequence):
@@ -15,8 +14,8 @@ def run(participant_ID, sequence):
 
     zed = sl.Camera()
 
-    # Create new stream info for lsl, stream camera_open, change source_id from "zed2i-harlem" to appropriate device, ex: "zed2i-midtown"
-    info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", ZED_DEVICE)
+    # Create new stream info for lsl, stream camera_open
+    info = StreamInfo("MotionTracking", "Markers", 1, 0, "string", "zed_camera")
     outlet = StreamOutlet(info)
 
     while True:
