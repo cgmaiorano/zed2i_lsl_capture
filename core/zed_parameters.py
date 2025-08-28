@@ -18,19 +18,3 @@ def initialize_zed_parameters(zed):
         print("Camera Open", err, "Exit program.")
         exit(1)
 
-
-def display_utilities(zed):
-    # Get ZED camera information
-    camera_info = zed.get_camera_information()
-
-    # 2D viewer utilities
-    display_resolution = sl.Resolution(
-        min(camera_info.camera_configuration.resolution.width, 1280),
-        min(camera_info.camera_configuration.resolution.height, 720),
-    )
-    image_scale = [
-        display_resolution.width / camera_info.camera_configuration.resolution.width,
-        display_resolution.height / camera_info.camera_configuration.resolution.height,
-    ]
-
-    return display_resolution, image_scale

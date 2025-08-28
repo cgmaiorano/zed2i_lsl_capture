@@ -36,17 +36,8 @@ def run(participant_ID, sequence):
     export.record_svo(participant_ID, sequence, zed, outlet)
 
     # main processing
-    ordered_df = processing.body_tracking(zed, outlet)
-
-    if ordered_df is None:
-        print(
-            f"Manual Quit... ZED Body tracking for Participant: {participant_ID} Sequence: {sequence} INCOMPLETED."
-        )
-        return
-
-    # save data
-    export.save_sequence(participant_ID, sequence, ordered_df)
+    processing.processing(zed, outlet)
 
     print(
-        f"ZED Body tracking for Participant: {participant_ID} Sequence: {sequence} is complete"
+        f"ZED Data Collection for Participant: {participant_ID} Sequence: {sequence} is complete"
     )

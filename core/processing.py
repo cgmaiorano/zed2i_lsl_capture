@@ -1,21 +1,17 @@
 import cv2
+import numpy as np
 import pyzed.sl as sl
-
-# import numpy as np
 from datetime import datetime
 
-from core import zed_parameters
-# from viewers import tracking_viewer
 
 
-def body_tracking(zed, lsl_outlet):
-    display_resolution, image_scale = zed_parameters.display_utilities(zed)
-
+def processing(zed, lsl_outlet):
+    
     # Create objects filled in the main loop
     image = sl.Mat()
     key = ""
 
-    # Start body tracking
+    # Start 
     print("Press 'q' to QUIT.")
 
     while True:  # Infinite loop
@@ -32,17 +28,12 @@ def body_tracking(zed, lsl_outlet):
         # Grab a frame
         if zed.grab() == sl.ERROR_CODE.SUCCESS:
             # Display frame
-            zed.retrieve_image(image, sl.VIEW.LEFT, sl.MEM.CPU, display_resolution)
-            image_left_ocv = image.get_data()
-            # tracking_viewer.render_2D(
-            #     image_left_ocv,
-            #     image_scale,
-            #     bodies.body_list,
-            #     body_param.enable_tracking,
-            #     body_param.body_format,
-            # )
-            cv2.imshow("ZED | 2D View", image_left_ocv)
-            cv2.moveWindow("ZED | 2D View", 100, 100)
+            zed.retrieve_image(image, sl.VIEW.LEFT)
+            img_zed = image.get_data().copy()
+            img_np = np.array(img_zed, copy=True)
+            img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGBA2BGR)
+            if img_np is not None and img_np.size > 0:
+                cv2.imshow("ZED", img_bgr)
 
         # Zed connection failed
         elif zed.grab() != sl.ERROR_CODE.SUCCESS:
@@ -52,12 +43,16 @@ def body_tracking(zed, lsl_outlet):
             ])
             print("Failed ZED connection")
             break
+    
+    # Stop Recording
+    zed.disable_recording()
+    end_time = datetime.now()
+    lsl_outlet.push_sample([
+        f"recording_stop: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"
+    ])
 
-    # Close the viewer
-    zed.disable_body_tracking()
-    zed.disable_positional_tracking()
+    # Close viewer
     zed.close()
-
     end_time = datetime.now()
     lsl_outlet.push_sample([
         f"camera_close: {end_time.strftime('%Y-%m-%d %H:%M:%S.%f')}"

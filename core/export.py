@@ -5,7 +5,7 @@ from settings import OUTPUT_DIR
 
 
 def record_svo(participant_ID, sequence, zed, lsl_outlet):
-    output_svo_file = OUTPUT_DIR + f"svo/{participant_ID}_seq{sequence}.svo2"
+    output_svo_file = OUTPUT_DIR + f"/svo/{participant_ID}_seq{sequence}.svo2"
     recording_param = sl.RecordingParameters(
         output_svo_file, sl.SVO_COMPRESSION_MODE.H265
     )  # Enable recording with the filename specified in argument

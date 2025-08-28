@@ -44,20 +44,7 @@ def render_sk(left_display, img_scale, obj, color, BODY_BONES) -> None:
             cv2.circle(left_display, (int(cv_kp[0]), int(cv_kp[1])), 3, color, -1)
 
 
-def render_2D(left_display, img_scale, objects, is_tracking_on, body_format) -> None:
+def render_2D(left_display, img_scale) -> None:
     """Render joints and bones."""
     overlay = left_display.copy()
-
-    # Render skeleton joints and bones
-    for obj in objects:
-        if utils.render_object(obj, is_tracking_on):
-            if len(obj.keypoint_2d) > 0:
-                color = utils.generate_color_id_u(obj.id)
-                if body_format == sl.BODY_FORMAT.BODY_18:
-                    render_sk(left_display, img_scale, obj, color, sl.BODY_18_BONES)
-                elif body_format == sl.BODY_FORMAT.BODY_34:
-                    render_sk(left_display, img_scale, obj, color, sl.BODY_34_BONES)
-                elif body_format == sl.BODY_FORMAT.BODY_38:
-                    render_sk(left_display, img_scale, obj, color, sl.BODY_38_BONES)
-
     cv2.addWeighted(left_display, 0.9, overlay, 0.1, 0.0, left_display)
