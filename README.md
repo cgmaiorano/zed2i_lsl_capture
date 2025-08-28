@@ -1,4 +1,4 @@
-# `zed2i_lsl_capture`
+# `zed2i_lsl_data_capture`
 
 A repository containing the necessary code to record an svo file from the ZED 2i for post processing and stream live markers to Lab Streaming Layer.
 
@@ -18,7 +18,7 @@ The package currently supports the ZED 2i and is reliant on proper installation 
 
 ## Processing pipeline implementation
 
-The main processing pipeline of the `zed2i_lsl_capture` module can be described as follows:
+The main processing pipeline of the `zed2i_lsl_data_capture` module can be described as follows:
 
 - **Provide participant specific arguments**: The user provides the participant ID and sequence number in the command line.
 - **Initiate the camera**: The zed camera will be triggerred to open. If the camera cannot be accessed, an error will be thrown. 
@@ -95,7 +95,7 @@ cd "C:\Program Files (x86)\ZED SDK"
 2. Clone this repository inside ZED SDK:
 
 ```sh
-git clone https://github.com/childmindresearch/zed2i_lsl_capture.git
+git clone https://github.com/childmindresearch/zed2i_lsl_data_capture.git
 ```
 
 3. Navigate to root:
