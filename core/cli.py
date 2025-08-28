@@ -1,9 +1,7 @@
 import argparse
-import pathlib
 from typing import List, Optional
 
-from core import with_stimulus_orchestrator
-from core import without_stimulus_orchestrator
+from core import orchestrator
 
 
 def parse_arguments(args: Optional[List[str]]) -> argparse.Namespace:
@@ -40,21 +38,9 @@ def parse_arguments(args: Optional[List[str]]) -> argparse.Namespace:
         help="Integer value representing current sequence or trial number.",
     )
 
-    parser.add_argument(
-        "--video",
-        type=pathlib.Path,
-        help="Optional argument. String representing the path to the stimulus video file.",
-    )
-
     return parser.parse_args(args)
 
 
 def main(args: Optional[List[str]] = None):
     arguments = parse_arguments(args)
-
-    if arguments.video is None:
-        without_stimulus_orchestrator.run(arguments.participant, arguments.sequence)
-    else:
-        with_stimulus_orchestrator.run(
-            arguments.participant, arguments.sequence, arguments.video
-        )
+    orchestrator.run(arguments.participant, arguments.sequence)
