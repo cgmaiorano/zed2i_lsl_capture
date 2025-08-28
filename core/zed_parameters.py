@@ -1,6 +1,6 @@
 import pyzed.sl as sl
 
-from settings import DEPTH_MODE, DETECTION_MODEL
+from settings import DEPTH_MODE
 
 
 def initialize_zed_parameters(zed):
@@ -17,29 +17,6 @@ def initialize_zed_parameters(zed):
     if err != sl.ERROR_CODE.SUCCESS:
         print("Camera Open", err, "Exit program.")
         exit(1)
-
-
-def initialize_tracking_parameters(zed):
-    # Enable Positional tracking (mandatory for object detection)
-    positional_tracking_parameters = sl.PositionalTrackingParameters()
-    positional_tracking_parameters.set_as_static = True  # camera is static
-    zed.enable_positional_tracking(positional_tracking_parameters)
-
-    # Set Body Tracking parameters
-    body_param = sl.BodyTrackingParameters()
-    body_param.enable_tracking = True  # Track people across images flow
-    body_param.enable_body_fitting = True  # Smooth skeleton move
-    body_param.detection_model = getattr(sl.BODY_TRACKING_MODEL, DETECTION_MODEL)
-    body_param.body_format = (
-        sl.BODY_FORMAT.BODY_38
-    )  # Choose the BODY_FORMAT you wish to use
-    zed.enable_body_tracking(body_param)
-
-    # Set Body Tracking Runtime parameters
-    body_runtime_param = sl.BodyTrackingRuntimeParameters()
-    body_runtime_param.detection_confidence_threshold = 50
-
-    return body_param, body_runtime_param
 
 
 def display_utilities(zed):

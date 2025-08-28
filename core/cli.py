@@ -1,7 +1,7 @@
 import argparse
 from typing import List, Optional
 
-from core import without_stimulus_orchestrator
+from core import orchestrator
 
 
 def parse_arguments(args: Optional[List[str]]) -> argparse.Namespace:
@@ -43,4 +43,4 @@ def parse_arguments(args: Optional[List[str]]) -> argparse.Namespace:
 
 def main(args: Optional[List[str]] = None):
     arguments = parse_arguments(args)
-    without_stimulus_orchestrator.run(arguments.participant, arguments.sequence)
+    orchestrator.run(arguments.participant, arguments.sequence)
